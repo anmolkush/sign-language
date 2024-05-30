@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Language Recognition</h1>
+        <div class="video-container">
+            <img id="video-feed" src="{{ url_for('video_feed') }}" onload="hideSpinner()">
+            <div class="spinner" id="spinner"></div>
+        </div>
+        <div class="controls">
+            <button class="btn start" onclick="startRecognition()">Start</button>
+            <button class="btn stop" onclick="stopRecognition()">Stop</button>
+            <button class="btn pause" onclick="pauseRecognition()">Pause</button>
+            <button class="btn resume" onclick="resumeRecognition()">Resume</button>
+        </div>
+        <div id="status">Status: Ready</div>
+        <div class="footer"> <br>Developed by Anmol Kushwaha and Akhand Pratap Singh</div>
+    </div>
+
+    <script>
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'block';
+        }
+
+        function hideSpinner() {
+            document.getElementById('spinner').style.display = 'none';
+        }
+
+        async function startRecognition() {
+            showSpinner();
+            const response = await fetch('/start', { method: 'POST' });
+            const result = await response.json();
+            document.getElementById('status').textContent = "Status: " + result.status;
+            hideSpinner();
+        }
+
+        async function stopRecognition() {
+            showSpinner();
+            const response = await fetch('/stop', { method: 'POST' });
+            const result = await response.json();
+            document.getElementById('status').textContent = "Status: " + result.status;
+            hideSpinner();
+        }
+
+        async function pauseRecognition() {
+            const response = await fetch('/pause', { method: 'POST' });
+            const result = await response.json();
+            document.getElementById('status').textContent = "Status: " + result.status;
+        }
+
+        async function resumeRecognition() {
+            const response = await fetch('/resume', { method: 'POST' });
+            const result = await response.json();
+            document.getElementById('status').textContent = "Status: " + result.status;
+        }
+    </script>
+</body>
+</html>
